@@ -48,3 +48,4 @@ export interface WidgetSettings {
   dockPosition: 'left' | 'right' | 'free';
   theme: 'dark' | 'glass' | 'cyber';
 }
+

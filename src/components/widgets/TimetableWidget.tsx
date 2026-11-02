@@ -247,3 +247,4 @@ export const TimetableWidget: React.FC<TimetableWidgetProps> = ({ events, onUpda
     </div>
   );
 };
+

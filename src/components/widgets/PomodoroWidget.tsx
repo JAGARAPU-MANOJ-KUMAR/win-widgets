@@ -143,3 +143,4 @@ export const PomodoroWidget: React.FC = () => {
     </div>
   );
 };
+

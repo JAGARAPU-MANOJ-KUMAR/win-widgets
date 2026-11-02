@@ -32,3 +32,4 @@ export function calculateEventProgress(startTime: string, endTime: string): { pr
 
   return { progress, isActive: true, isPast: false };
 }
+

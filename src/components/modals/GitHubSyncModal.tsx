@@ -137,3 +137,4 @@ export const GitHubSyncModal: React.FC<GitHubSyncModalProps> = ({
     </div>
   );
 };
+

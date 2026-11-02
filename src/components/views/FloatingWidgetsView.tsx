@@ -124,3 +124,4 @@ export const FloatingWidgetsView: React.FC<FloatingWidgetsViewProps> = ({
     </div>
   );
 };
+

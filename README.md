@@ -87,3 +87,4 @@ To link this repository to your GitHub account and keep it up to date:
 - `Ctrl + Shift + Space`: Summon / Hide widgets anywhere (when running via Electron).
 - `Opacity Slider`: Adjust widget translucency so it blends with your desktop background.
 - `Pin Button`: Pin widgets to stay on top of other applications.
+

@@ -137,3 +137,4 @@ export const MiniDockWidget: React.FC<MiniDockWidgetProps> = ({
     </div>
   );
 };
+

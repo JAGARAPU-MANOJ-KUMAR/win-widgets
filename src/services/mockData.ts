@@ -145,3 +145,4 @@ export const INITIAL_NOTES: ScratchNote[] = [
     tags: ['Meeting', 'Tasks'],
   },
 ];
+

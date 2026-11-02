@@ -217,3 +217,4 @@ export const ScratchpadWidget: React.FC<ScratchpadWidgetProps> = ({ notes, onUpd
     </div>
   );
 };
+

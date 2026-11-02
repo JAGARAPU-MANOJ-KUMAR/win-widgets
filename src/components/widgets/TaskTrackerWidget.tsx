@@ -240,3 +240,4 @@ export const TaskTrackerWidget: React.FC<TaskTrackerWidgetProps> = ({ tasks, onU
     </div>
   );
 };
+
