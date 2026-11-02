@@ -1,0 +1,40 @@
+{
+  "name": "omnidesk-widgets",
+  "version": "1.0.0",
+  "description": "Cross-platform floating desktop widget system for work tracking, time-blocking schedule, and instant notes.",
+  "main": "electron/main.js",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview",
+    "electron:dev": "vite build && electron electron/main.js",
+    "electron:start": "electron electron/main.js"
+  },
+  "keywords": [
+    "widgets",
+    "desktop-widgets",
+    "work-tracker",
+    "timetable",
+    "notion-alternative",
+    "productivity",
+    "time-blocking",
+    "scratchpad"
+  ],
+  "author": "Manoj",
+  "license": "MIT",
+  "dependencies": {
+    "clsx": "^2.1.1",
+    "lucide-react": "^0.475.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.13.0",
+    "@types/react": "^19.0.8",
+    "@types/react-dom": "^19.0.3",
+    "@vitejs/plugin-react": "^4.3.4",
+    "electron": "^34.2.0",
+    "typescript": "^5.7.3",
+    "vite": "^6.1.0"
+  }
+}
