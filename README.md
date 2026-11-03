@@ -1,90 +1,59 @@
-# 🪐 OmniDesk — Unified Desktop Widgets & Everything Tracker
+# 🪐 OmniDesk — True Floating Desktop Widgets for Your Laptop
 
-> **The floating desktop widget system for your laptop.** Combines the relational organization of **Notion**, the time-blocking schedule of **TickTick**, and the instant capture speed of **Sticky Notes** — directly on your screen without OS limitations.
-
----
-
-## ⚡ The Problems It Solves
-
-| Traditional App | Limitation | How OmniDesk Solves It |
-| :--- | :--- | :--- |
-| **Notion** | No floating desktop widgets on laptop; slow to load for quick notes; heavy browser tab. | **Floating translucent desktop widgets** that stay pinned on your screen; instant scratchpad capture in < 1 second. |
-| **TickTick** | Paywalled calendar & widgets; rigid notes; no markdown code blocks or checklists. | **100% Free daily timetable** with live auto-advancing time-block progress, interactive markdown checklists. |
-| **Sticky Notes** | No timetable; no task management; no priority tags; purely plain text. | **Rich multi-widget system**: Timetable + Work Tracker + Scratchpad + Pomodoro Timer. |
+> **True independent desktop widgets placed directly on your screen (just like phone home screen widgets).** No giant app window required — stick individual widgets anywhere on your desktop wallpaper or keep them pinned above your work to track tasks, timetable, and fast notes.
 
 ---
 
-## 🌟 Core Features
+## 📱 How the Desktop Widgets Work
 
-- 📌 **Screen Floating Widgets**:
-  - Keep widgets floating over your desktop wallpaper or on top of active work.
-  - **Opacity Slider (35% to 100%)**: Make widgets subtle and non-intrusive while coding or browsing.
-  - **Always-on-top Pin**: Keep critical tasks and schedule visible at a glance.
-- ⏱️ **Live Timetable & Schedule Tracker**:
-  - Visual time blocks for Deep Work, Meetings, Quick Tasks, and Breaks.
-  - Auto-calculated real-time progress bar showing the elapsed time for the current active block.
-- ✅ **Work & Task Tracker**:
-  - Priority pills (`P1 Urgent`, `P2 High`, `P3 Normal`).
-  - Progress meter (`5/8 completed - 63%`).
-  - Filter by status (`Todo`, `In Progress`, `Done`).
-- 📝 **Fast Scratchpad (The Notion Hybrid)**:
-  - Interactive checklists (`- [ ]` and `- [x]`) — click directly to check off items.
-  - Multi-note tabs for separating Ideas, Meetings, and Quick Jots.
-  - 1-click **Copy as Markdown** to paste into Notion or GitHub.
-- 🎯 **Focus Pomodoro Timer**:
-  - 25m Focus / 5m Break with progress arc and session counter.
-- 💾 **Local-First & Git-Synced**:
-  - 100% offline functionality with zero loading delay.
-  - Export full JSON backups or sync directly to your GitHub repository.
+Unlike traditional apps that keep everything trapped inside a single browser or application window, **OmniDesk runs each widget as an independent, frameless desktop gadget**:
+
+1. **Independent Floating Windows**:
+   - ⏱️ **Timetable Widget**: Place your day's time blocks and live progress needle anywhere on your screen.
+   - ✅ **Tasks Tracker Widget**: A floating checklist with Notion-style priority badges (`P1`, `P2`, `P3`) and progress meters.
+   - 📝 **Sticky Scratchpad Widget**: Instant note capture with interactive markdown checklists (`- [ ]`) and 1-click **Copy to Notion/Markdown**.
+   - 🎯 **Focus Pomodoro Widget**: A tiny floating timer pill for 25m Focus / 5m Break sessions.
+   - 🪐 **Widget Launcher Bar**: A sleek floating pill docked at the bottom/top of your screen with buttons to spawn new widgets or toggle all widgets in 1 click.
+
+2. **Drag & Position Anywhere**:
+   - Drag any widget by its top bar to place it anywhere across single or multi-monitor setups.
+   - **Auto-Saved Coordinates**: Screen positions (`x`, `y`) and dimensions are automatically saved to disk so your widgets remain in the exact spot you left them when you turn on your laptop.
+
+3. **Pin & Opacity Control (Per-Widget)**:
+   - **📌 Pin Button**: Toggle whether a widget stays on top of your full-screen code/apps or sits calmly on your desktop background.
+   - **🎛️ Opacity Slider (35% to 100%)**: Make widgets subtle and translucent so they never block your view while coding, reading, or working.
+   - **✕ Close Button**: Close any individual widget at any time.
+
+4. **⚡ Global Hotkey**:
+   - Press <kbd>Ctrl + Shift + Space</kbd> anywhere on your laptop to instantly hide or reveal all widgets at once.
 
 ---
 
-## 🚀 Quick Start
+## 🚀 How to Run Your Desktop Widgets
 
-### 1. Install Dependencies
-```bash
-npm install
-```
-
-### 2. Run in Browser / Web Mode
-```bash
-npm run dev
-```
-Open [http://localhost:3000](http://localhost:3000) to view your widgets.
-
-### 3. Run as Native Desktop App (Frameless Floating Widgets)
-```bash
+### 1. Launch Native Desktop Gadget Mode (Multi-Window Screen Widgets)
+```powershell
 npm run electron:start
 ```
+This spawns:
+- Your floating desktop widgets directly on your laptop screen.
+- The sleek **Widget Launcher Bar** to spawn additional widgets.
+- System tray integration with quick-access controls.
+
+### 2. Launch Web Mode (In Browser)
+```powershell
+npm run dev
+```
+Open [http://localhost:3000](http://localhost:3000) to preview or pop out individual widgets into floating mini-windows.
 
 ---
 
-## 🔗 Connecting to Your Remote GitHub Repository
-
-To link this repository to your GitHub account and keep it up to date:
-
-1. **Create an empty repository** on GitHub:
-   - Visit [github.com/new](https://github.com/new)
-   - Repository name: `win-widgets` (or any name you prefer)
-   - Leave *"Add a README file"* **unchecked** (we already have one).
-2. **Add Remote & Push**:
-   ```bash
-   git remote add origin https://github.com/<YOUR_GITHUB_USERNAME>/win-widgets.git
-   git branch -M main
-   git push -u origin main
-   ```
-3. **Keep it Updated**:
-   Whenever you make updates:
-   ```bash
-   git add .
-   git commit -m "update widgets and data"
-   git push
-   ```
-
----
-
-## ⌨️ Shortcuts & Controls
-- `Ctrl + Shift + Space`: Summon / Hide widgets anywhere (when running via Electron).
-- `Opacity Slider`: Adjust widget translucency so it blends with your desktop background.
-- `Pin Button`: Pin widgets to stay on top of other applications.
-
+## 🔗 GitHub Remote Repository
+* **Repository**: [https://github.com/JAGARAPU-MANOJ-KUMAR/win-widgets](https://github.com/JAGARAPU-MANOJ-KUMAR/win-widgets)
+* **Branch**: `main`
+* **Syncing Updates**:
+  ```powershell
+  git add .
+  git commit -m "update widgets"
+  git push origin main
+  ```
