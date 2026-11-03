@@ -23,7 +23,10 @@ function loadWidgetsConfig() {
   try {
     if (fs.existsSync(configPath)) {
       const data = fs.readFileSync(configPath, 'utf8');
-      return JSON.parse(data);
+      const parsed = JSON.parse(data);
+      if (Array.isArray(parsed) && parsed.length > 0) {
+        return parsed;
+      }
     }
   } catch (err) {
     console.error('Failed to load widget config, using defaults:', err);
@@ -56,13 +59,26 @@ function saveWidgetsConfig() {
   }
 }
 
-function getAppUrl(widgetQuery = '') {
-  const isDev = process.env.NODE_ENV === 'development' || !app.isPackaged;
+// Robust loader supporting both dev server and local production build
+function loadTarget(win, queryString) {
+  const distPath = path.join(__dirname, '../dist/index.html');
+  const isDev = process.env.NODE_ENV === 'development';
+
   if (isDev) {
-    return `http://localhost:3000${widgetQuery ? '?' + widgetQuery : ''}`;
+    win.loadURL(`http://localhost:3000?${queryString}`).catch(() => {
+      // Fallback to dist if dev server isn't running
+      if (fs.existsSync(distPath)) {
+        win.loadFile(distPath, { search: queryString, hash: queryString });
+      }
+    });
+  } else {
+    if (fs.existsSync(distPath)) {
+      win.loadFile(distPath, { search: queryString, hash: queryString });
+    } else {
+      // If dist doesn't exist yet, try local dev URL
+      win.loadURL(`http://localhost:3000?${queryString}`);
+    }
   }
-  const indexPath = path.join(__dirname, '../dist/index.html');
-  return `file://${indexPath}${widgetQuery ? '?' + widgetQuery : ''}`;
 }
 
 // Create a single floating desktop widget window
@@ -87,7 +103,7 @@ function createWidgetWindow(widget) {
     transparent: true,
     hasShadow: true,
     alwaysOnTop: widget.alwaysOnTop || false,
-    skipTaskbar: true, // Independent floating widgets don't clutter the taskbar
+    skipTaskbar: true,
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
       nodeIntegration: false,
@@ -103,17 +119,8 @@ function createWidgetWindow(widget) {
   }
 
   const query = `widget=${widget.type}&id=${widget.id}`;
-  const targetUrl = getAppUrl(query);
+  loadTarget(win, query);
 
-  if (targetUrl.startsWith('http')) {
-    win.loadURL(targetUrl).catch(() => {
-      win.loadFile(path.join(__dirname, '../dist/index.html'), { query: { widget: widget.type, id: widget.id } });
-    });
-  } else {
-    win.loadFile(path.join(__dirname, '../dist/index.html'), { query: { widget: widget.type, id: widget.id } });
-  }
-
-  // Save location on move or resize
   win.on('moved', () => saveWidgetsConfig());
   win.on('resized', () => saveWidgetsConfig());
 
@@ -135,7 +142,7 @@ function createLauncherWindow() {
     width: 440,
     height: 58,
     x: Math.round((width - 440) / 2),
-    y: height - 80, // Docked near bottom of screen
+    y: height - 80,
     frame: false,
     transparent: true,
     hasShadow: true,
@@ -149,14 +156,7 @@ function createLauncherWindow() {
     },
   });
 
-  const targetUrl = getAppUrl('widget=launcher');
-  if (targetUrl.startsWith('http')) {
-    launcherWindow.loadURL(targetUrl).catch(() => {
-      launcherWindow.loadFile(path.join(__dirname, '../dist/index.html'), { query: { widget: 'launcher' } });
-    });
-  } else {
-    launcherWindow.loadFile(path.join(__dirname, '../dist/index.html'), { query: { widget: 'launcher' } });
-  }
+  loadTarget(launcherWindow, 'widget=launcher');
 
   launcherWindow.on('closed', () => {
     launcherWindow = null;
@@ -164,10 +164,13 @@ function createLauncherWindow() {
 }
 
 function setupTray() {
+  const iconPath = path.join(__dirname, 'icon.png');
   try {
-    tray = new Tray(path.join(__dirname, 'icon.png'));
+    if (fs.existsSync(iconPath)) {
+      tray = new Tray(iconPath);
+    }
   } catch (e) {
-    // Graceful fallback if icon is not yet packaged
+    console.warn('Tray icon initialization skipped:', e);
   }
 
   const buildMenu = () => {
@@ -194,7 +197,7 @@ function setupTray() {
         click: () => toggleAllWidgetsVisibility(),
       },
       {
-        label: 'Reset Widgets to Default Layout',
+        label: 'Reset to Default Layout',
         click: () => resetWidgetsLayout(),
       },
       { type: 'separator' },
@@ -211,6 +214,7 @@ function setupTray() {
   if (tray) {
     tray.setToolTip('OmniDesk Desktop Widgets');
     tray.setContextMenu(buildMenu());
+    tray.on('double-click', () => toggleAllWidgetsVisibility());
   }
 }
 
@@ -257,6 +261,11 @@ function toggleAllWidgetsVisibility() {
       else win.show();
     }
   }
+
+  if (launcherWindow && !launcherWindow.isDestroyed()) {
+    if (anyVisible) launcherWindow.hide();
+    else launcherWindow.show();
+  }
 }
 
 function resetWidgetsLayout() {
@@ -269,12 +278,10 @@ function resetWidgetsLayout() {
 }
 
 function setupIPC() {
-  // Spawn a new desktop widget directly onto screen
   ipcMain.on('widget-spawn', (event, type) => {
     spawnNewWidget(type);
   });
 
-  // Close an individual widget window
   ipcMain.on('widget-close', (event, widgetId) => {
     const win = widgetWindows.get(widgetId);
     if (win && !win.isDestroyed()) {
@@ -282,7 +289,6 @@ function setupIPC() {
     }
   });
 
-  // Toggle Always On Top for an individual widget
   ipcMain.on('widget-toggle-pin', (event, { widgetId, alwaysOnTop }) => {
     const win = widgetWindows.get(widgetId);
     if (win && !win.isDestroyed()) {
@@ -291,7 +297,6 @@ function setupIPC() {
     }
   });
 
-  // Adjust Opacity for an individual widget
   ipcMain.on('widget-set-opacity', (event, { widgetId, opacity }) => {
     const win = widgetWindows.get(widgetId);
     if (win && !win.isDestroyed()) {
@@ -300,12 +305,10 @@ function setupIPC() {
     }
   });
 
-  // Toggle launcher / widgets
   ipcMain.on('widget-toggle-all', () => {
     toggleAllWidgetsVisibility();
   });
 
-  // Broadcast data changes to all open widget windows
   ipcMain.on('widget-broadcast-data', (event, { key, data }) => {
     for (const win of widgetWindows.values()) {
       if (!win.isDestroyed()) {
@@ -327,14 +330,11 @@ app.whenReady().then(() => {
   setupIPC();
   setupTray();
 
-  // Load saved widgets or spawn defaults onto desktop
   const savedWidgets = loadWidgetsConfig();
   savedWidgets.forEach((w) => createWidgetWindow(w));
 
-  // Open the Floating Desktop Launcher bar
   createLauncherWindow();
 
-  // Global hotkey to toggle all screen widgets
   try {
     globalShortcut.register('CommandOrControl+Shift+Space', () => {
       toggleAllWidgetsVisibility();
@@ -359,7 +359,6 @@ app.on('will-quit', () => {
 });
 
 app.on('window-all-closed', () => {
-  // Keep alive in tray if widgets are closed
   if (process.platform !== 'darwin' && isQuitting) {
     app.quit();
   }

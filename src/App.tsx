@@ -19,6 +19,25 @@ import {
 } from './services/mockData';
 import { Task, ScheduleEvent, ScratchNote, WidgetSettings } from './types';
 
+// Robust parameter parser supporting search query (?widget=...) and hash (#widget=...)
+function getWidgetInfo() {
+  const searchParams = new URLSearchParams(window.location.search);
+  let widgetType = searchParams.get('widget');
+  let widgetId = searchParams.get('id');
+
+  if (!widgetType && window.location.hash) {
+    const rawHash = window.location.hash.replace(/^[#?\/]+/, '');
+    const hashParams = new URLSearchParams(rawHash);
+    widgetType = hashParams.get('widget');
+    widgetId = hashParams.get('id');
+  }
+
+  return {
+    widgetType,
+    widgetId: widgetId || (widgetType ? `widget-${widgetType}` : ''),
+  };
+}
+
 export const App: React.FC = () => {
   const [tasks, setTasks] = useLocalStorage<Task[]>('omnidesk_tasks', INITIAL_TASKS);
   const [events, setEvents] = useLocalStorage<ScheduleEvent[]>('omnidesk_events', INITIAL_EVENTS);
@@ -28,10 +47,7 @@ export const App: React.FC = () => {
   const [currentView, setCurrentView] = useState<'widgets' | 'dashboard'>('widgets');
   const [isSyncModalOpen, setIsSyncModalOpen] = useState(false);
 
-  // Check if this window was spawned as an independent floating desktop widget
-  const params = new URLSearchParams(window.location.search);
-  const widgetType = params.get('widget');
-  const widgetId = params.get('id') || `widget-${widgetType}`;
+  const { widgetType, widgetId } = getWidgetInfo();
 
   // 1. Standalone Timetable Widget Window
   if (widgetType === 'timetable') {

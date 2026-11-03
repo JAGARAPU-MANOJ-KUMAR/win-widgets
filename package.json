@@ -1,14 +1,42 @@
 {
   "name": "omnidesk-widgets",
   "version": "1.0.0",
-  "description": "Cross-platform floating desktop widget system for work tracking, time-blocking schedule, and instant notes.",
+  "description": "True cross-platform floating desktop screen widgets for work tracking, timetable scheduling, and fast notes.",
   "main": "electron/main.js",
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
     "preview": "vite preview",
+    "start": "vite build && electron electron/main.js",
     "electron:dev": "vite build && electron electron/main.js",
-    "electron:start": "electron electron/main.js"
+    "electron:start": "vite build && electron electron/main.js",
+    "build:exe": "npm run build && electron-builder --win nsis",
+    "build:portable": "npm run build && electron-builder --win portable"
+  },
+  "build": {
+    "appId": "com.omnidesk.widgets",
+    "productName": "OmniDesk Widgets",
+    "directories": {
+      "output": "release"
+    },
+    "files": [
+      "dist/**/*",
+      "electron/**/*",
+      "package.json"
+    ],
+    "win": {
+      "target": [
+        "nsis",
+        "portable"
+      ]
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "OmniDesk Widgets"
+    }
   },
   "keywords": [
     "widgets",
@@ -29,13 +57,14 @@
     "react-dom": "^19.0.0"
   },
   "devDependencies": {
-    "@tailwindcss/vite": "^4.3.3",
+    "@tailwindcss/vite": "^4.1.1",
     "@types/node": "^22.13.0",
     "@types/react": "^19.0.8",
     "@types/react-dom": "^19.0.3",
     "@vitejs/plugin-react": "^4.3.4",
     "electron": "^34.2.0",
-    "tailwindcss": "^4.3.3",
+    "electron-builder": "^25.1.8",
+    "tailwindcss": "^4.1.1",
     "typescript": "^5.7.3",
     "vite": "^6.1.0"
   }

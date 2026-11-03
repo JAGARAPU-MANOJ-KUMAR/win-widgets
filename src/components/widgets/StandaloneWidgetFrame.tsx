@@ -139,3 +139,4 @@ export const StandaloneWidgetFrame: React.FC<StandaloneWidgetFrameProps> = ({
     </div>
   );
 };
+
